@@ -25,7 +25,7 @@
             stroke-opacity: .2;
         }
         .link:hover {
-            stroke-opacity: .5;
+            stroke-opacity: .7 !important;
         }
     </style>
     <!-- Bootstrap core CSS -->
@@ -129,7 +129,7 @@
                     d.id = i;
                     return "link-" + i;
                 })
-                .style("stroke", function(d) { 
+                .style("stroke", function (d) {
                     return d.target.color = color(d.target.name.replace(/ .*/, ""));
                 })
                 .style("stroke-width", function (d) {
@@ -195,7 +195,12 @@
                 .attr("text-anchor", "start");
 
             function dragmove(d) {
-                d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+                d3.select(this).attr("transform",
+                    "translate(" + (
+                        d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
+                    ) + "," + (
+                        d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+                    ) + ")");
                 sankey.relayout();
                 link.attr("d", path);
             }
@@ -206,12 +211,13 @@
                     nextNodes = [];
 
                 var stroke_opacity = 0;
+
                 if (d3.select(this).attr("data-clicked") == "1") {
                     d3.select(this).attr("data-clicked", "0");
                     stroke_opacity = 0.2;
                 } else {
                     d3.select(this).attr("data-clicked", "1");
-                    stroke_opacity = 0.8;
+                    stroke_opacity = 0.7;
                 }
 
                 var traverse = [{
@@ -242,7 +248,9 @@
             }
 
             function highlight_link(id, opacity) {
-                d3.select("#link-" + id).style("stroke-opacity", opacity);
+                d3.select("#link-" + id).style("stroke-opacity", opacity).style('stroke', function (d) {
+                    return d.target.color = color(d.target.name.replace(/ .*/, ""));
+                });
             }
 
         });
