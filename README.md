@@ -1,4 +1,4 @@
 quesadilla
 ==========
 
-A energy visualization for the United States
+An energy visualization for the United States
