@@ -1,0 +1,25 @@
+{"nodes":[
+{"name":"Agricultural"},
+{"name":"Bio-conversion"},
+{"name":"Liquid"},
+{"name":"Losses"},
+{"name":"Solid"},
+{"name":"Gas"},
+{"name":"Biofuel imports"},
+{"name":"Biomass imports"},
+{"name":"Coal imports"},
+{"name":"Coal"},
+{"name":"Coal reserves"},
+{"name":"District heating"},
+{"name":"Industry"},
+{"name":"H2 conversion"},
+{"name":"Road transport"},
+{"name":"Other waste"}
+],
+"links":[
+{"source":"Agricultural","target":"Bio-conversion","2002":800,"2003":500},
+{"source":15,"target":12,"2002":400,"2003":500},
+{"source":1,"target":4,"2002":300,"2003":500},
+{"source":1,"target":5,"2002":100,"2003":500},
+{"source":15,"target":3,"2002":200,"2003":500}
+]}

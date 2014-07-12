@@ -85,6 +85,7 @@
     <script src="public/libs/jquery/dist/jquery.min.js"></script>
     <script src="public/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
+
         var margin = {
                 top: 1,
                 right: 1,
@@ -110,10 +111,18 @@
             .nodeWidth(15)
             .nodePadding(10)
             .size([width, height]);
-
+		
         var path = sankey.link();
-
-        d3.json("sankeygreenhouse.json", function (energy) {
+		
+		var year = "2002";
+		//***!!! MAKE SURE THE LINKS HAVE YEARS !!!***//
+		
+        d3.json("workingJSON.json", function (energy) {
+		    
+			//for each link, set the value equal to the year
+			for(var k in energy.links) {
+				energy.links[k].value = energy.links[k][year];
+			}
 
             sankey
                 .nodes(energy.nodes)
