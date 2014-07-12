@@ -1,4 +1,4 @@
 quesadilla
 ==========
 
-An energy visualization for the United States
+An [energy visualization](http://mdahlhausen.github.io/quesadilla/) for the United States

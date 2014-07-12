@@ -87,13 +87,13 @@
     <script>
 
         var margin = {
-                top: 1,
-                right: 1,
-                bottom: 6,
-                left: 1
+                top: 25,
+                right: 10,
+                bottom: 50,
+                left: 10
             },
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            width = 1200 - margin.left - margin.right,
+            height = 800 - margin.top - margin.bottom;
 
         var formatNumber = d3.format(",.0f"),
             format = function (d) {
@@ -117,13 +117,21 @@
 		var year = "2002";
 		//***!!! MAKE SURE THE LINKS HAVE YEARS !!!***//
 		
-        d3.json("workingJSON.json", function (energy) {
+        d3.json("USenergy.json", function (energy) {
 		    
-			//for each link, set the value equal to the year
-			for(var k in energy.links) {
-				energy.links[k].value = energy.links[k][year];
-			}
-
+			// for each link, set the value equal to the year
+			// we may want another solution for this, as this may impede transition dynamics? 
+			var k = 0;
+			while (k < energy.links.length) {
+				energy.links[k].value = energy.links[k][year];				
+				// filter out nodes below a certain size
+				if (energy.links[k].value < 0.1) {
+					energy.links.splice(k, 1); 
+				} else {
+				    k = k + 1;
+                }				
+			}			
+		
             sankey
                 .nodes(energy.nodes)
                 .links(energy.links)
