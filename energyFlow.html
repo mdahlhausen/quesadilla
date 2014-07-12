@@ -27,13 +27,44 @@
         .link:hover {
             stroke-opacity: .7 !important;
         }
+		.axis {
+		  font: 10px sans-serif;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  user-select: none;
+		}
+
+		.axis .domain {
+		  fill: none;
+		  stroke: #000;
+		  stroke-opacity: .3;
+		  stroke-width: 10px;
+		  stroke-linecap: round;
+		}
+
+		.axis .halo {
+		  fill: none;
+		  stroke: #ddd;
+		  stroke-width: 8px;
+		  stroke-linecap: round;
+		}
+
+		.slider .handle {
+		  fill: #fff;
+		  stroke: #000;
+		  stroke-opacity: .5;
+		  stroke-width: 1.25px;
+		  pointer-events: none;
+		}
     </style>
     <!-- Bootstrap core CSS -->
     <link href="public/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <!-- Custom styles for this template -->
     <link href="style.css" rel="stylesheet">
+	<link href="public/libs/d3/slider/d3.slider.css" rel="stylesheet">
     <script src="public/libs/d3/d3.min.js"></script>
+	<script src="public/libs/d3/slider/d3.slider.js"></script>
     <script src="sankey.js"></script>
 
 </head>
@@ -60,14 +91,16 @@
                     </div>
                 </div>
 
-                <div class="inner cover">
+                <div class="inner cover">					
+				    <h2>Year: <span id="year">2010</span></h2>
+					<p id="slider">
                     <p id="chart">
                 </div>
 
                 <div class="mastfoot">
                     <div class="inner">
 
-                        <p>Development and Visualizations By: <a href="https://github.com/mdahlhausen">Matt Dahlhausen</a>, <a href="https://github.com/nmattise">Nick Mattise</a>, <a href="https://github.com/muh182">Mohammad Heidarinejad</a>,<a href="https://github.com/krish1995">Krishang Sharma</a> and <a href="https://github.com/landryh91">Landry Horimbere</a>
+                        <p>Development and Visualizations By: <a href="https://github.com/mdahlhausen">Matt Dahlhausen</a>, <a href="https://github.com/landryh91">Landry Horimbere</a>, <a href="https://github.com/nmattise">Nick Mattise</a>, <a href="https://github.com/muh182">Mohammad Heidarinejad</a>, <a href="https://github.com/krish1995">Krishang Sharma</a> and Andrew Bresee
                         </p>
                         <p>Page Template for Bootstrap by <a href="https://twitter.com/mdo">@mdo</a>.</p>
                     </div>
@@ -97,9 +130,28 @@
 
         var formatNumber = d3.format(",.0f"),
             format = function (d) {
-                return formatNumber(d) + " TWh";
+                return formatNumber(d) + " Trillion Btu";
             },
             color = d3.scale.category20();
+		
+		var year = "2002";
+		
+		function setYear(year){
+                
+        };
+		
+		d3.select('#slider').call(d3.slider()
+			.axis(true)
+			.min(2000)
+			.max(2010)
+			.containerWidth(1500)
+			.step(1)
+			.value(2002)
+			.on("slide", function(evt, value) {
+				d3.select('#year').text(value);
+				year = value.toString()
+			})
+		);
 
         var svg = d3.select("#chart").append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -113,10 +165,7 @@
             .size([width, height]);
 		
         var path = sankey.link();
-		
-		var year = "2002";
-		//***!!! MAKE SURE THE LINKS HAVE YEARS !!!***//
-		
+				
         d3.json("USenergy.json", function (energy) {
 		    
 			// for each link, set the value equal to the year
