@@ -72,6 +72,15 @@ d3.sankey = function () {
 
         return link;
     };
+	
+	// Function for mapping a node name to its index in the node array 
+	function findWithAttr(array, attr, value) {
+		for(var i = 0; i < array.length; i += 1) {
+			if(array[i][attr] === value) {
+				return i;
+			}
+		}
+	}	
 
     // Populate the sourceLinks and targetLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
@@ -82,7 +91,15 @@ d3.sankey = function () {
         });
         links.forEach(function (link) {
             var source = link.source,
-                target = link.target;
+                target = link.target;	
+			if (typeof source === "string") { 
+				var idx = findWithAttr(nodes, "name", link.source);
+				source = link.source = nodes[idx];
+			}
+			if (typeof target === "string") { 
+				var idx = findWithAttr(nodes, "name", link.target);
+				target = link.target = nodes[idx];
+			}
             if (typeof source === "number") source = link.source = nodes[link.source];
             if (typeof target === "number") target = link.target = nodes[link.target];
             source.sourceLinks.push(link);
