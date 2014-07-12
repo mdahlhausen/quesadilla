@@ -136,20 +136,18 @@
 		
 		var year = "2002";
 		
-		function setYear(year){
-                
-        };
-		
 		d3.select('#slider').call(d3.slider()
 			.axis(true)
-			.min(2000)
-			.max(2010)
+			.min(1949)
+			.max(2040)
 			.containerWidth(1500)
 			.step(1)
 			.value(2002)
 			.on("slide", function(evt, value) {
 				d3.select('#year').text(value);
-				year = value.toString()
+				year = value.toString();
+				removeSankey();
+				drawSankey();
 			})
 		);
 
@@ -165,8 +163,16 @@
             .size([width, height]);
 		
         var path = sankey.link();
-				
-        d3.json("USenergy.json", function (energy) {
+		
+		drawSankey();
+		
+		function removeSankey() {
+			svg.selectAll(".link").remove()
+			svg.selectAll(".node").remove()
+		}
+		
+		function drawSankey() {		
+			d3.json("USenergy.json", function (energy) {
 		    
 			// for each link, set the value equal to the year
 			// we may want another solution for this, as this may impede transition dynamics? 
@@ -323,7 +329,8 @@
             }
 
         });
-    </script>
+		}
+	</script>
 
 </body>
 
