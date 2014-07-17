@@ -85,8 +85,7 @@
                             </li>
                             <li class="active"><a href="energyFlow.html">Energy Flow</a>
                             </li>
-                            <li><a href="about.html">About Us</a>
-                            </li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -125,8 +124,8 @@
                 bottom: 50,
                 left: 10
             },
-            width = 1200 - margin.left - margin.right,
-            height = 800 - margin.top - margin.bottom;
+            width = 1000 - margin.left - margin.right,
+            height = 650 - margin.top - margin.bottom;
 
         var formatNumber = d3.format(",.0f"),
             format = function (d) {
@@ -140,7 +139,7 @@
 			.axis(true)
 			.min(1949)
 			.max(2040)
-			.containerWidth(1500)
+			.containerWidth(1000)
 			.step(1)
 			.value(2002)
 			.on("slide", function(evt, value) {
