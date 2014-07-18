@@ -25,7 +25,7 @@
             stroke-opacity: .2;
         }
         .link:hover {
-            stroke-opacity: .7 !important;
+            stroke-opacity: .7; !important
         }
         .axis {
             font: 10px sans-serif;
@@ -158,6 +158,13 @@
             svg.selectAll(".link").remove()
             svg.selectAll(".node").remove()
         }
+		
+		function searchStringInArray (str, strArray) {
+			for (var j=0; j<strArray.length; j++) {
+				if (strArray[j].match(str)) return 1;
+			}	
+			return 0;
+		}
 
         function drawSankey() {
             d3.json("USenergy.json", function (energy) {
@@ -165,16 +172,34 @@
                 // for each link, set the value equal to the year
                 // we may want another solution for this, as this may impede transition dynamics? 
                 var k = 0;
+				var sources = [];
+				var targets = [];
                 while (k < energy.links.length) {
                     energy.links[k].value = energy.links[k][year];
+					if (energy.links[k].value != null) {
+						sources.push(energy.links[k].source);
+						targets.push(energy.links[k].target);
+					}					
                     // filter out nodes below a certain size
-                    if (energy.links[k].value < 0.1) {
+                    if (energy.links[k].value < 10) {
                         energy.links.splice(k, 1);
                     } else {
                         k = k + 1;
                     }
                 }
-                
+				
+				// remove nodes that are not a source or target
+				var k = 0;
+				while (k < energy.nodes.length) {
+					var inSources = searchStringInArray(energy.nodes[k].name, sources);
+					var inTargets = searchStringInArray(energy.nodes[k].name, targets);
+					if ((inSources == 0) & (inTargets == 0)) {
+						energy.nodes.splice(k, 1);						
+					} else {
+						k = k + 1;
+					}
+				}
+				
                 sankey
                     .nodes(energy.nodes)
                     .links(energy.links)
