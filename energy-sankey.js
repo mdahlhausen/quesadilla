@@ -182,9 +182,9 @@ d3.csv("etf-geo2.csv", function (data) {
             })
         .style("font-size",
             function () {
-                var textSize = 300 * this.__data__.value;
-                if (textSize > 20) {
-                    return "20px"
+                var textSize = 200 * this.__data__.value;
+                if (textSize > 15) {
+                    return "15"
                 } else {
                     return textSize.toString() + "px";
                 }
@@ -195,124 +195,7 @@ d3.csv("etf-geo2.csv", function (data) {
         .attr("x", 15 + sankey.nodeWidth())
         .attr("text-anchor", "start");
 
-    // highlight links on mouseover
-    function onLinkMouseover() {
-        if (isSliding) {
-            return;
-        }
-        d3.select(this).transition().duration(150).delay(150).style("stroke-opacity", .25);
-        var targName = this.__data__.target.name;
-        d3.select(".link-hover-text").transition().duration(200).delay(50).style("color", "rgba(51,51,51,.9)");
-        d3.select(".link-target-name").text(targName).transition().duration(200).delay(50)
-            .style("color", "rgba(0,45,86,.9)");
-        d3.select(".link-source-name").text(this.__data__.source.name)
-            .transition().duration(200).delay(50)
-            .style("color", "rgba(0,45,86,.9)");
-        d3.select(".link-source-pct").text((100 * this.__data__.value).toFixed(1) + "%")
-            .transition().duration(200).delay(50)
-            .style("color", "rgba(52,124,180,.9)");
-        d3.select("div.link-hover").transition().duration(200).style("background-color", "rgba(223,231,239,.99)").style("z-index", "3");
-    };
 
-    function onLinkMouseout() {
-        d3.select(this).transition().duration(150).style("stroke-opacity", .07);
-        d3.select(".link-hover").transition().duration(250)
-            .style("background-color", "rgba(223,231,239,0)").style("z-index", "-1");
-        d3.select(".link-hover-text").transition().duration(150)
-            .style("color", "rgba(51,51,51,0)");
-        d3.select(".link-source-pct")
-            .transition().duration(150)
-            .style("color", "rgba(52,124,180,0)");
-        d3.select(".link-source-name")
-            .transition().duration(150)
-            .style("color", "rgba(0,45,86,0)");
-        d3.select(".link-target-name")
-            .transition().duration(150)
-            .style("color", "rgba(0,45,86,0)");
-    };
-
-    // highlight nodes on rectangle mouseover
-    function onNodeMouseover(node, i) {
-        if (isSliding) {
-            return;
-        }
-        d3.select(this).transition().duration(150).delay(150)
-            .style("fill-opacity", 1).style("fill", function () {
-                var textSize = 300 * this.__data__.x;
-                if (this.__data__.x > 100) {
-                    return "#305275"
-                }
-            });
-        this.__data__.targetLinks.sort(function (a, b) {
-            return parseFloat(b.value) - parseFloat(a.value)
-        });
-        this.__data__.sourceLinks.sort(function (a, b) {
-            return parseFloat(b.value) - parseFloat(a.value)
-        });
-        var eX = this.__data__.x;
-        var eY = this.__data__.y + 130;
-        if (eX < width / 2) {
-            eX = 110;
-        } else {
-            eX = width - 400;
-            if (eY > (height + 100) * 0.9) {
-                eY = (height + 100) * 0.9
-            }
-        };
-        d3.select(".hover-tooltip-sankey").transition().duration(150).delay(150)
-            .style("top", eY + "px").style("left", eX + "px").style("background-color", "rgba(255,255,255,.9)").style("z-index", "5");
-        d3.select(".hover-name").text(this.nextElementSibling.textContent + " : ").transition().duration(150).delay(150)
-            .style("color", "rgba(0,45,86,.9");
-        d3.select(".hover-name-pct").text((100 * this.__data__.value).toFixed(1)).transition().duration(150).delay(150)
-            .style("color", "rgba(52,124,180,.9");
-        //d3.select(".node-source").html(nodeSrcText).transition().duration(150).delay(150)
-        //  .style("color", "rgba(51,51,51,.9");
-
-        var remainingNodes = [],
-            nextNodes = [];
-        var stroke_opacity = .25;
-        var traverse = [{
-            linkType: "sourceLinks",
-            nodeType: "target"
-      }, {
-            linkType: "targetLinks",
-            nodeType: "source"
-      }];
-        traverse.forEach(function (step) {
-            node[step.linkType].forEach(function (link) {
-                remainingNodes.push(link[step.nodeType]);
-                highlight_link(link.id, stroke_opacity);
-            });
-            while (remainingNodes.length) {
-                nextNodes = [];
-                remainingNodes.forEach(function (node) {
-                    node[step.linkType].forEach(function (link) {
-                        nextNodes.push(link[step.nodeType]);
-                        highlight_link(link.id, stroke_opacity);
-                    });
-                });
-                remainingNodes = nextNodes;
-            }
-        });
-    }
-
-    function highlight_link(id, opacity) {
-        d3.select("#link-" + id).transition().duration(150).delay(150).style("stroke-opacity", opacity);
-    }
-
-    function onNodeMouseout() {
-        d3.selectAll(".link").transition().duration(150).delay(150).style("stroke-opacity", 0.07);
-        d3.select(".hover-tooltip-sankey").transition().duration(150).delay(150).style("background-color", "rgba(255,255,255,0)").style("z-index", "-1");
-        d3.select(".hover-name").transition().duration(150).delay(150).style("color", "rgba(0,45,86,0");
-        d3.select(".hover-name-pct").transition().duration(150).delay(150).style("color", "rgba(52,124,180,0");
-        d3.select(".node-source").transition().duration(150).delay(150).style("color", "rgba(51,51,51,0");
-        d3.select(this).transition().duration(150).delay(150).style("fill",
-            function () {
-                if (this.__data__.x > 100) {
-                    return countryGreyBlue;
-                }
-            }).style("fill-opacity", .75);
-    }
 
     function getValue(passedObj) {
         return passedObj.__data__.value;
@@ -381,9 +264,9 @@ d3.csv("etf-geo2.csv", function (data) {
                 return d.dy / 2;
             })
             .style("font-size", function () {
-                var textSize = 300 * this.__data__.value;
-                if (textSize > 20) {
-                    return "20px"
+                var textSize = 200 * this.__data__.value;
+                if (textSize > 15) {
+                    return "15"
                 } else {
                     return textSize.toString() + "px";
                 }
