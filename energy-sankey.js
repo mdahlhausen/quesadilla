@@ -10,7 +10,7 @@ if (currentWidth > 978){
   currentWidth = 978
 };
 
-var currentHeight=currentWidth/1.07;
+var currentHeight=currentWidth/1.6;
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
     width = currentWidth - margin.left - margin.right,
