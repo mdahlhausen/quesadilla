@@ -50,7 +50,6 @@ d3.csv("etf-geo2.csv", function(data) {
     for (var j=0; j < 101; j++) {
       item.values.push(d['value'+j.toString()]);
     }
-	console.log(item);
 	energyValues.push(item);
 	graph.nodes.push({ "name": d.source });
 	graph.nodes.push({ "name": d.target });
@@ -80,7 +79,7 @@ d3.csv("etf-geo2.csv", function(data) {
       graph.nodes[i] = { "name": d };
   });
 
-// contruct sankey
+// construct sankey
   sankey
       .nodes(graph.nodes)
       .links(graph.links)
@@ -93,8 +92,8 @@ d3.csv("etf-geo2.csv", function(data) {
       .attr("class", "link")
       .attr("id",
         function(d,i){
-        d.id = i;
-        return "link-"+i;
+			d.id = i;
+			return "link-"+i;
         })
       .attr("d", path)
       .on("mouseover", onLinkMouseover)
@@ -116,8 +115,8 @@ d3.csv("etf-geo2.csv", function(data) {
         function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .style("visibility",
         function() {
-        if (this.__data__.value == 0) {return "hidden";}
-        else{return "visible";}
+			if (this.__data__.value == 0) {return "hidden";}
+			else{return "visible";}
         });
 
 // add the rectangles for the nodes
@@ -125,8 +124,8 @@ d3.csv("etf-geo2.csv", function(data) {
     .attr("height", function(d) { return d.dy; })
     .attr("width", sankey.nodeWidth())
     .attr("class",function(d) {return d.name})
-    .on("mouseover",highlight_node_links)
-    .on("mouseout",onNodeMouseout)
+    .on("mouseover", onNodeMouseover)
+    .on("mouseout", onNodeMouseout)
 
 // add in the title for the nodes
   node.append("text")
@@ -147,24 +146,22 @@ d3.csv("etf-geo2.csv", function(data) {
       .attr("x", 15 + sankey.nodeWidth())
       .attr("text-anchor", "start");
 
-   // HIGHLIGHT LINKS ON MOUSEOVER /////////////////////
+  // highlight links on mouseover
   function onLinkMouseover(){
     if (isSliding){
       return;
     }
     d3.select(this).transition().duration(150).delay(150).style("stroke-opacity", .25);
-    var targName = shortNameSwitch(this.__data__.target.name);
-    if (targName == "United States"){targName = "the United States"};
-    if (targName == "United Kingdom"){targName = "the United Kingdom"};
+    var targName = this.__data__.target.name;
     d3.select(".link-hover-text").transition().duration(200).delay(50).style("color","rgba(51,51,51,.9)");
     d3.select(".link-target-name").text(targName).transition().duration(200).delay(50)
-    .style("color","rgba(0,45,86,.9)");
-    d3.select(".link-source-name").text(shortNameSwitch(this.__data__.source.name))
-    .transition().duration(200).delay(50)
-    .style("color","rgba(0,45,86,.9)");
+		.style("color","rgba(0,45,86,.9)");
+    d3.select(".link-source-name").text(this.__data__.source.name)
+		.transition().duration(200).delay(50)
+		.style("color","rgba(0,45,86,.9)");
     d3.select(".link-source-pct").text((100*this.__data__.value).toFixed(1)+"%")
-    .transition().duration(200).delay(50)
-    .style("color","rgba(52,124,180,.9)");
+		.transition().duration(200).delay(50)
+		.style("color","rgba(52,124,180,.9)");
     d3.select("div.link-hover").transition().duration(200).style("background-color", "rgba(223,231,239,.99)").style("z-index","3");
   };
 
@@ -186,59 +183,39 @@ d3.csv("etf-geo2.csv", function(data) {
   };
 
   // highlight nodes on rectangle mouseover
-  function highlight_node_links(node,i){
+  function onNodeMouseover(node,i){
     if (isSliding){
-    return;
+		return;
     }
     d3.select(this).transition().duration(150).delay(150)
-    .style("fill-opacity", 1).style("fill",function(){
-      var textSize = 300*this.__data__.x;
-      if (this.__data__.x > 100){
-        return "#305275"
-      }
-    });
-
+      .style("fill-opacity", 1).style("fill",function(){
+		var textSize = 300*this.__data__.x;
+		if (this.__data__.x > 100){
+		return "#305275"
+	    }
+      });
     this.__data__.targetLinks.sort(function(a,b){
       return parseFloat(b.value) - parseFloat(a.value)
     });
-
     this.__data__.sourceLinks.sort(function(a,b){
       return parseFloat(b.value) - parseFloat(a.value)
     });
-
-    var targetValues = "";
-    for (var i=0;i<this.__data__.targetLinks.length;i++)
-      { targetValues += "<tr><td class='comp-name'>" + shortNameSwitch(this.__data__.targetLinks[i].source.name) + " : </td><td class='comp-pct'>" + (100*this.__data__.targetLinks[i].value).toFixed(1) + "%</td><td class='comp-blank'></td></tr>";};
-
-    var sourceValues = "";
-    for (var i=0;i<this.__data__.sourceLinks.length;i++)
-      { sourceValues += "<tr><td class='comp-name'>" + shortNameSwitch(this.__data__.sourceLinks[i].target.name) + " : </td><td class='comp-pct'>" + (100*this.__data__.sourceLinks[i].value).toFixed(1) + "%</td><td class='comp-blank'></td></tr>";};
-
-    var nodeSrcText = "";
-    if (this.__data__.targetLinks.length>0){nodeSrcText=targetValues}else{nodeSrcText=sourceValues};
-
     var eX = this.__data__.x;
     var eY = this.__data__.y + 130;
-
     if(eX<width/2){
       eX = 110;
-    }else{
+    } else{
       eX= width-400;
       if (eY > (height+100)*0.9){eY = (height+100)*0.9 }
     };
-
-    if (this.__data__.name == "VWOB") {eY = eY-350};
-    if (this.__data__.name == "BNDX") {eY = eY-300};
-    if (this.__data__.name == "VWO") {eY = eY-100};
-
     d3.select(".hover-tooltip-sankey").transition().duration(150).delay(150)
       .style("top",eY+"px").style("left",eX+"px").style("background-color","rgba(255,255,255,.9)").style("z-index","5");
     d3.select(".hover-name").text(this.nextElementSibling.textContent+" : ").transition().duration(150).delay(150)
       .style("color", "rgba(0,45,86,.9");
     d3.select(".hover-name-pct").text((100*this.__data__.value).toFixed(1)).transition().duration(150).delay(150)
       .style("color", "rgba(52,124,180,.9");
-    d3.select(".node-source").html(nodeSrcText).transition().duration(150).delay(150)
-      .style("color", "rgba(51,51,51,.9");
+    //d3.select(".node-source").html(nodeSrcText).transition().duration(150).delay(150)
+    //  .style("color", "rgba(51,51,51,.9");
 
     var remainingNodes=[],
         nextNodes=[];
@@ -291,12 +268,11 @@ d3.csv("etf-geo2.csv", function(data) {
   }
 
 // update function
-  function updateData(allocation) {
+  function updateData(index) {
 
     currentWidth = $(".sankey-container").width();
     if (currentWidth < 550){currentWidth = 550};
     if (currentWidth > 978){currentWidth = 978};
-
     width = currentWidth;
 
     $("svg").width(currentWidth);
@@ -307,7 +283,7 @@ d3.csv("etf-geo2.csv", function(data) {
         newLinks.push({
           source: p.source,
           target: p.target,
-          value: p.values[allocation]
+          value: p.values[index]
         });
     });
 
@@ -336,7 +312,7 @@ d3.csv("etf-geo2.csv", function(data) {
 
     d3.selectAll("rect")
     .attr("height", function(d) { return d.dy; })
-    .on("mouseover",highlight_node_links)
+    .on("mouseover",onNodeMouseover)
     .on("mouseout",onNodeMouseout);
 
     d3.selectAll("text")
@@ -379,12 +355,9 @@ d3.csv("etf-geo2.csv", function(data) {
     );
 
   $(".sankey-slider").bind("slider:changed", function (event, data) {
-    // console.log(event)
-    // sliderEvent = event;
     if (!isSliding){
       $(".sankey-container").one("mouseup", function() {
         isSliding = false;
-        // sliderEvent = false;
       });
       isSliding = true;
     }
@@ -392,9 +365,6 @@ d3.csv("etf-geo2.csv", function(data) {
     slideValue = data.value;
     d3.select("#year").text(slideValue + indexYear);
     updateData(parseInt(slideValue));
-
   });
-
-
 
 });
