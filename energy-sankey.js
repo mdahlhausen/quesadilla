@@ -10,7 +10,7 @@ if (currentWidth > 978) {
     currentWidth = 978
 };
 
-var currentHeight = window.innerHeight *.8;
+var currentHeight = window.innerHeight * .8;
 
 var margin = {
         top: 0,
@@ -271,7 +271,7 @@ d3.csv("etf-geo2.csv", function (data) {
             }).style("stroke-width", "0px");
 
 
-         d3.selectAll("text")
+        d3.selectAll("text")
             .attr("y", function (d) {
                 return d.dy / 2;
             })
@@ -322,49 +322,49 @@ d3.csv("etf-geo2.csv", function (data) {
         updateData(parseInt(slideValue));
     });
 
-    function highlight_node_links(node,i){
+    function highlight_node_links(node, i) {
 
-    var remainingNodes=[],
-        nextNodes=[];
+        var remainingNodes = [],
+            nextNodes = [];
 
-    var stroke_opacity = 0;
-    if( d3.select(this).attr("data-clicked") == "1" ){
-      d3.select(this).attr("data-clicked","0");
-      stroke_opacity = 0.2;
-    }else{
-      d3.select(this).attr("data-clicked","1");
-      stroke_opacity = 0.65;
-    }
+        var stroke_opacity = 0;
+        if (d3.select(this).attr("data-clicked") == "1") {
+            d3.select(this).attr("data-clicked", "0");
+            stroke_opacity = 0.2;
+        } else {
+            d3.select(this).attr("data-clicked", "1");
+            stroke_opacity = 0.65;
+        }
 
-    var traverse = [{
-                      linkType : "sourceLinks",
-                      nodeType : "target"
-                    },{
-                      linkType : "targetLinks",
-                      nodeType : "source"
+        var traverse = [{
+            linkType: "sourceLinks",
+            nodeType: "target"
+                    }, {
+            linkType: "targetLinks",
+            nodeType: "source"
                     }];
 
-    traverse.forEach(function(step){
-      node[step.linkType].forEach(function(link) {
-        remainingNodes.push(link[step.nodeType]);
-        highlight_link(link.id, stroke_opacity);
-      });
+        traverse.forEach(function (step) {
+            node[step.linkType].forEach(function (link) {
+                remainingNodes.push(link[step.nodeType]);
+                highlight_link(link.id, stroke_opacity);
+            });
 
-      while (remainingNodes.length) {
-        nextNodes = [];
-        remainingNodes.forEach(function(node) {
-          node[step.linkType].forEach(function(link) {
-            nextNodes.push(link[step.nodeType]);
-            highlight_link(link.id, stroke_opacity);
-          });
+            while (remainingNodes.length) {
+                nextNodes = [];
+                remainingNodes.forEach(function (node) {
+                    node[step.linkType].forEach(function (link) {
+                        nextNodes.push(link[step.nodeType]);
+                        highlight_link(link.id, stroke_opacity);
+                    });
+                });
+                remainingNodes = nextNodes;
+            }
         });
-        remainingNodes = nextNodes;
-      }
-    });
-  }
+    }
 
-  function highlight_link(id,opacity){
-      d3.select("#link-"+id).style("stroke-opacity", opacity);
-  }
+    function highlight_link(id, opacity) {
+        d3.select("#link-" + id).style("stroke-opacity", opacity);
+    }
 
 });
