@@ -153,7 +153,14 @@ d3.csv("etf-geo2.csv", function (data) {
                     return "visible";
                 }
             })
-        .on("click", highlight_node_links);
+        .on("click", highlight_node_links).call(d3.behavior.drag()
+                        .origin(function (d) {
+                            return d;
+                        })
+                        .on("dragstart", function () {
+                            this.parentNode.appendChild(this);
+                        })
+                        .on("drag", dragmove));
 
     // add the rectangles for the nodes
     node.append("rect")
@@ -366,5 +373,15 @@ d3.csv("etf-geo2.csv", function (data) {
     function highlight_link(id, opacity) {
         d3.select("#link-" + id).style("stroke-opacity", opacity);
     }
+     function dragmove(d) {
+                    d3.select(this).attr("transform",
+                        "translate(" + (
+                            d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
+                        ) + "," + (
+                            d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+                        ) + ")");
+                    sankey.relayout();
+                    link.attr("d", path);
+                }
 
 });
