@@ -152,7 +152,8 @@ d3.csv("etf-geo2.csv", function (data) {
                 } else {
                     return "visible";
                 }
-            });
+            })
+        .on("click", highlight_node_links);
 
     // add the rectangles for the nodes
     node.append("rect")
@@ -190,7 +191,7 @@ d3.csv("etf-geo2.csv", function (data) {
             })
         .style("font-size",
             function () {
-                var textSize = 200 * this.__data__.value;
+                var textSize = 300 * this.__data__.value;
                 if (textSize > 15) {
                     return "15"
                 } else {
@@ -250,8 +251,8 @@ d3.csv("etf-geo2.csv", function (data) {
                 d.id = i;
                 return "link-" + i;
             }).style("stroke", function (d) {
-            return d.target.color = color(d.target.name.replace(/ .*/, ""));
-        })
+                return d.target.color = color(d.target.name.replace(/ .*/, ""));
+            })
             .style("stroke-width", function (d) {
                 return Math.max(1, d.dy);
             })
@@ -274,7 +275,7 @@ d3.csv("etf-geo2.csv", function (data) {
                 return d.dy / 2;
             })
             .style("font-size", function () {
-                var textSize = 200 * this.__data__.value;
+                var textSize = 300 * this.__data__.value;
                 if (textSize > 15) {
                     return "15"
                 } else {
@@ -319,5 +320,50 @@ d3.csv("etf-geo2.csv", function (data) {
         d3.select("#year").text(slideValue + indexYear);
         updateData(parseInt(slideValue));
     });
+
+    function highlight_node_links(node,i){
+
+    var remainingNodes=[],
+        nextNodes=[];
+
+    var stroke_opacity = 0;
+    if( d3.select(this).attr("data-clicked") == "1" ){
+      d3.select(this).attr("data-clicked","0");
+      stroke_opacity = 0.2;
+    }else{
+      d3.select(this).attr("data-clicked","1");
+      stroke_opacity = 0.5;
+    }
+
+    var traverse = [{
+                      linkType : "sourceLinks",
+                      nodeType : "target"
+                    },{
+                      linkType : "targetLinks",
+                      nodeType : "source"
+                    }];
+
+    traverse.forEach(function(step){
+      node[step.linkType].forEach(function(link) {
+        remainingNodes.push(link[step.nodeType]);
+        highlight_link(link.id, stroke_opacity);
+      });
+
+      while (remainingNodes.length) {
+        nextNodes = [];
+        remainingNodes.forEach(function(node) {
+          node[step.linkType].forEach(function(link) {
+            nextNodes.push(link[step.nodeType]);
+            highlight_link(link.id, stroke_opacity);
+          });
+        });
+        remainingNodes = nextNodes;
+      }
+    });
+  }
+
+  function highlight_link(id,opacity){
+      d3.select("#link-"+id).style("stroke-opacity", opacity);
+  }
 
 });
