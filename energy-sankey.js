@@ -10,7 +10,7 @@ if (currentWidth > 978) {
     currentWidth = 978
 };
 
-var currentHeight = currentWidth / 1.6;
+var currentHeight = window.innerHeight *.8;
 
 var margin = {
         top: 0,
@@ -187,13 +187,14 @@ d3.csv("etf-geo2.csv", function (data) {
         .attr("transform", null)
         .text(
             function (d) {
-                return d.name;
+                var shortN = d.name;
+                return shortN; //NameSwitch(shortN);
             })
         .style("font-size",
             function () {
                 var textSize = 300 * this.__data__.value;
                 if (textSize > 15) {
-                    return "15"
+                    return "15px"
                 } else {
                     return textSize.toString() + "px";
                 }
@@ -270,14 +271,14 @@ d3.csv("etf-geo2.csv", function (data) {
             }).style("stroke-width", "0px");
 
 
-        d3.selectAll("text")
+         d3.selectAll("text")
             .attr("y", function (d) {
                 return d.dy / 2;
             })
             .style("font-size", function () {
                 var textSize = 300 * this.__data__.value;
                 if (textSize > 15) {
-                    return "15"
+                    return "15px"
                 } else {
                     return textSize.toString() + "px";
                 }
@@ -332,7 +333,7 @@ d3.csv("etf-geo2.csv", function (data) {
       stroke_opacity = 0.2;
     }else{
       d3.select(this).attr("data-clicked","1");
-      stroke_opacity = 0.5;
+      stroke_opacity = 0.65;
     }
 
     var traverse = [{
