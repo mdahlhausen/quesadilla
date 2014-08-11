@@ -97,8 +97,8 @@ d3.csv("etf-geo2.csv", function(data) {
         return "link-"+i;
         })
       .attr("d", path)
-      .on("mouseover", onLinkMouseover)
-      .on("mouseout", onLinkMouseout)
+      /*.on("mouseover", onLinkMouseover)
+      .on("mouseout", onLinkMouseout)*/
       .style("stroke-width", function(d) { return Math.max(1, d.dy); })
       .sort(function(a, b) { return b.dy - a.dy; })
       .style("visibility",
@@ -124,9 +124,9 @@ d3.csv("etf-geo2.csv", function(data) {
   node.append("rect")
     .attr("height", function(d) { return d.dy; })
     .attr("width", sankey.nodeWidth())
-    .attr("class",function(d) {return d.name})
-    .on("mouseover",highlight_node_links)
-    .on("mouseout",onNodeMouseout)
+    .attr("class",function(d) {return d.name});
+    /*.on("mouseover",highlight_node_links)
+    .on("mouseout",onNodeMouseout)*/
 
 // add in the title for the nodes
   node.append("text")
@@ -336,8 +336,8 @@ d3.csv("etf-geo2.csv", function(data) {
 
     d3.selectAll("rect")
     .attr("height", function(d) { return d.dy; })
-    .on("mouseover",highlight_node_links)
-    .on("mouseout",onNodeMouseout);
+    /*.on("mouseover",highlight_node_links)
+    .on("mouseout",onNodeMouseout)*/;
 
     d3.selectAll("text")
     .attr("y", function(d) { return d.dy / 2; })
