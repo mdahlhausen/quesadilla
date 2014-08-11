@@ -1,0 +1,43 @@
+.node rect {
+	cursor: move;
+	fill-opacity: .9;
+	shape-rendering: crispEdges;
+}
+.node text {
+	pointer-events: none;
+	text-shadow: 0 1px 0 #fff;
+}
+.link {
+	fill: none;
+	stroke: #000;
+	stroke-opacity: .2;
+}
+.link:hover {
+	stroke-opacity: .7; !important
+}
+.axis {
+	font: 10px sans-serif;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+.axis .domain {
+	fill: none;
+	stroke: #000;
+	stroke-opacity: .3;
+	stroke-width: 10px;
+	stroke-linecap: round;
+}
+.axis .halo {
+	fill: none;
+	stroke: #ddd;
+	stroke-width: 8px;
+	stroke-linecap: round;
+}
+.slider .handle {
+	fill: #fff;
+	stroke: #000;
+	stroke-opacity: .5;
+	stroke-width: 1.25px;
+	pointer-events: none;
+}
