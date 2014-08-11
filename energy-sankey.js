@@ -118,6 +118,9 @@ d3.csv("etf-geo2.csv", function (data) {
                 return "link-" + i;
             })
         .attr("d", path)
+        .style("stroke", function (d) {
+            return d.target.color = color(d.target.name.replace(/ .*/, ""));
+        })
         .style("stroke-width", function (d) {
             return Math.max(1, d.dy);
         })
@@ -164,7 +167,12 @@ d3.csv("etf-geo2.csv", function (data) {
 
     .attr("class", function (d) {
         return d.name
-    });
+    }).style("fill", function (d) {
+        return d.color = color(d.name.replace(/ .*/, ""));
+    })
+        .style("stroke", function (d) {
+            return d3.rgb(d.color).darker(2);
+        }).style("stroke-width", "0px");
 
 
     // add in the title for the nodes
@@ -241,7 +249,9 @@ d3.csv("etf-geo2.csv", function (data) {
             .attr("id", function (d, i) {
                 d.id = i;
                 return "link-" + i;
-            })
+            }).style("stroke", function (d) {
+            return d.target.color = color(d.target.name.replace(/ .*/, ""));
+        })
             .style("stroke-width", function (d) {
                 return Math.max(1, d.dy);
             })
@@ -256,7 +266,7 @@ d3.csv("etf-geo2.csv", function (data) {
         d3.selectAll("rect")
             .attr("height", function (d) {
                 return d.dy;
-            });
+            }).style("stroke-width", "0px");
 
 
         d3.selectAll("text")
