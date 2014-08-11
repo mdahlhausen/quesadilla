@@ -1,0 +1,33 @@
+.slider {
+  margin:auto;
+  text-align: center;
+}
+.slider > .dragger {
+  background: #fff;
+  -moz-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  border-radius: 15px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #999;
+}
+.slider > .dragger:hover {
+  background: -webkit-linear-gradient(top, #fff, #ccc);
+}
+.slider > .track, .slider > .highlight-track {
+  background: #347cb4;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  border: 1px solid #999;
+  height: 8px;
+}
+.slider > .highlight-track {
+	background-color: #197b30;
+	border-color: #999;
+}
