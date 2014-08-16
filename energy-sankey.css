@@ -10,10 +10,10 @@
 .link {
 	fill: none;
 	stroke: #000;
-	stroke-opacity: .2;
+	stroke-opacity: 0.25;
 }
 .link:hover {
-	stroke-opacity: .7; !important
+	stroke-opacity: .75; !important
 }
 .axis {
 	font: 10px sans-serif;

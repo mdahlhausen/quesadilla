@@ -13,10 +13,10 @@ if (currentWidth > 978) {
 var currentHeight = window.innerHeight * .8;
 
 var margin = {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
+		top: 5,
+        right: 5,
+        bottom: 5,
+        left: 5
     },
     width = currentWidth - margin.left - margin.right,
     height = currentHeight - margin.top - margin.bottom;
@@ -36,8 +36,8 @@ var svg = d3.select("#chart").append("svg")
 
 // Set the sankey diagram properties
 var sankey = d3.sankey()
-    .nodeWidth(70)
-    .nodePadding(1.5)
+    .nodeWidth(25)
+    .nodePadding(10)
     .size([width, height]);
 
 var path = sankey.link();
@@ -78,11 +78,9 @@ d3.csv("energy-sankey-data.csv", function (data) {
         });
     });
 
-    //this handy little function returns only the distinct / unique nodes
+    // this function returns unique nodes
     graph.nodes = d3.keys(d3.nest()
-        .key(function (d) {
-            return d.name;
-        })
+        .key(function (d) { return d.name; })
         .map(graph.nodes));
 
     //it appears d3 with force layout wants a numeric source and target
@@ -96,10 +94,8 @@ d3.csv("energy-sankey-data.csv", function (data) {
 
     //now loop through each nodes to make nodes an array of objects rather than an array of strings
     graph.nodes.forEach(function (d, i) {
-        graph.nodes[i] = {
-            "name": d
-        };
-    });
+        graph.nodes[i] = { "name": d };
+	});
 
     // construct sankey
     sankey
@@ -141,10 +137,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         .data(graph.nodes)
         .enter().append("g")
         .attr("class", "node")
-        .attr("transform",
-            function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
-            })
+        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
         .style("visibility",
             function () {
                 if (this.__data__.value == 0) {
@@ -153,42 +146,26 @@ d3.csv("energy-sankey-data.csv", function (data) {
                     return "visible";
                 }
             })
-        .on("click", highlight_node_links).call(d3.behavior.drag()
-                        .origin(function (d) {
-                            return d;
-                        })
-                        .on("dragstart", function () {
-                            this.parentNode.appendChild(this);
-                        })
-                        .on("drag", dragmove));
+        .on("click", highlight_node_links)
+		.call(d3.behavior.drag()
+				.origin(function (d) { return d; })
+				.on("dragstart", function () { this.parentNode.appendChild(this); })
+				.on("drag", dragmove));
 
     // add the rectangles for the nodes
     node.append("rect")
-        .attr("height", function (d) {
-            return d.dy;
-        })
+        .attr("height", function (d) { return d.dy; })
         .attr("width", sankey.nodeWidth())
-
-    .attr("class", function (d) {
-        return d.name
-    })
-
-    .attr("class", function (d) {
-        return d.name
-    }).style("fill", function (d) {
-        return d.color = color(d.name.replace(/ .*/, ""));
-    })
-        .style("stroke", function (d) {
-            return d3.rgb(d.color).darker(2);
-        }).style("stroke-width", "0px");
-
+		.attr("class", function (d) { return d.name;	})
+		.attr("class", function (d) { return d.name; })
+		.style("fill", function (d) { return d.color = color(d.name.replace(/ .*/, "")); })
+        .style("stroke", function (d) { return d3.rgb(d.color).darker(2); })
+		.style("stroke-width", "0px");
 
     // add in the title for the nodes
     node.append("text")
         .attr("x", -15)
-        .attr("y", function (d) {
-            return d.dy / 2;
-        })
+        .attr("y", function (d) { return d.dy / 2; })
         .attr("dy", ".35em")
         .attr("text-anchor", "end")
         .attr("transform", null)
@@ -206,13 +183,9 @@ d3.csv("energy-sankey-data.csv", function (data) {
                     return textSize.toString() + "px";
                 }
             })
-        .filter(function (d) {
-            return d.x < width / 2;
-        })
+        .filter(function (d) { return d.x < width / 2; })
         .attr("x", 15 + sankey.nodeWidth())
         .attr("text-anchor", "start");
-
-
 
     function getValue(passedObj) {
         return passedObj.__data__.value;
