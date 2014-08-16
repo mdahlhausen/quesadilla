@@ -49,7 +49,7 @@ var energyValues = [];
 var sliderDragVisible = true;
 
 // load the data with d3.csv
-d3.csv("etf-geo2.csv", function (data) {
+d3.csv("energy-sankey-data.csv", function (data) {
     graph = {
         "nodes": [],
         "links": []
