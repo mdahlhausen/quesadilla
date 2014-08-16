@@ -20,7 +20,7 @@
   background: -webkit-linear-gradient(top, #fff, #ccc);
 }
 .slider > .track, .slider > .highlight-track {
-  background: #347cb4;
+  background: #999999;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
@@ -28,6 +28,6 @@
   height: 8px;
 }
 .slider > .highlight-track {
-	background-color: #197b30;
+	background-color: #555555;
 	border-color: #999;
 }
