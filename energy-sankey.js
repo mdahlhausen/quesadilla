@@ -47,6 +47,7 @@ var path = sankey.link();
 var graph, data, link, node, sliderEvent;
 var energyValues = [];
 var sliderDragVisible = true;
+var play = null;
 
 // load the data with d3.csv
 d3.csv("energy-sankey-data.csv", function (data) {
@@ -293,35 +294,33 @@ d3.csv("energy-sankey-data.csv", function (data) {
         updateData(parseInt(slideYear - indexYear));
     });
 
-	/* auto-advance year when play button is selected.  currently 
-	var play = null; 
-	
-	$("#btnStartSlide").on("click", function startSlide() {			
-			if (play == null){
-				var year = indexYear;			
-				play = setInterval( function() {
-					if (play < endYear) {				
-						if (!isSliding) {
-							$(".sankey-container").one("mouseup", function () {
-								isSliding = false;
-							});
-							isSliding = true;
-						}					
-						year += 1;
-						slideYear = year;
-						d3.select("#year").text(slideYear);
-						updateData(parseInt(slideYear - indexYear));
-					} else {
-						stopSlide();
-					}
-				}, 1000);
-			}
+	// auto-advance year when play button is selected.  currently 
+	$("#btnStartSlide").on("click", function startSlide() {		
+		if (play == null){
+			var year = indexYear;			
+			play = setInterval( function() {
+				if (year < endYear + 1) {				
+					if (!isSliding) {
+						isSliding = true;
+					}								
+					slideYear = year;
+					$(".sankey-slider").val(slideYear);
+					//console.log($(".sankey-slider").val());
+					d3.select("#year").text(slideYear);
+					updateData(parseInt(slideYear - indexYear));
+					year += 1;
+				} else {
+					clearInterval(play);
+					play = null;
+				}
+			}, 200);
+		}
 	}); 
 	
 	$("#btnStopSlide").on("click", function stopSlide() {
-			clearInterval(play);
-			play = null;
-	}); */
+		clearInterval(play);
+		play = null;
+	}); 
 	
 	// highlight a node on hover	
     function highlight_node_links(node, i) {
@@ -381,7 +380,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
 		d3.select(".hover-tooltip-sankey").transition().duration(50).delay(50)
 			.style("top",eY+"px").style("left",eX+"px")
 			.style("background-color","rgba(255,255,255,.9)")
-			.style("z-index","5");
+			.style("display","block");
 		d3.select(".hover-value").text((this.__data__.value).toFixed(0) + " Trillion Btu")
 			.transition().duration(50).delay(50).style("background-color","rgba(255,255,255,.9)");
     }
@@ -393,7 +392,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
 	
 	function onNodeMouseout(){
 		d3.select(".hover-tooltip-sankey")
-			.transition().duration(50).delay(50).style("background-color","rgba(255,255,255,0)").style("z-index","-1");
+			.transition().duration(50).delay(50).style("background-color","rgba(255,255,255,0)").style("display","none");
 		d3.select(".hover-value").transition().duration(50).delay(50).style("background-color","rgba(255,255,255,0)");
     }			
 	
