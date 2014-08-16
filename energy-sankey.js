@@ -42,7 +42,7 @@ var sankey = d3.sankey()
 
 var path = sankey.link();
 
-var startingYear = 60,
+var startingYear = 2010,
     indexYear = 1949;
 var graph, data, link, node, sliderEvent;
 var energyValues = [];
@@ -61,8 +61,8 @@ d3.csv("energy-sankey-data.csv", function (data) {
             target: d.target,
             values: []
         };
-        for (var j = 0; j < 101; j++) {
-            item.values.push(d['value' + j.toString()]);
+        for (var j = 1949; j <= 2040; j++) {
+            item.values.push(d[j.toString()]);
         }
         energyValues.push(item);
         graph.nodes.push({
@@ -74,7 +74,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         graph.links.push({
             source: energyValues[i].source,
             target: energyValues[i].target,
-            value: energyValues[i].values[startingYear]
+            value: energyValues[i].values[startingYear - indexYear]
         });
     });
 
@@ -184,7 +184,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
 
     // update function
     function updateData(index) {
-
+		
         currentWidth = $(".sankey-container").width();
         if (currentWidth < 550) { currentWidth = 550 };
         if (currentWidth > 978) { currentWidth = 978 };
@@ -217,7 +217,8 @@ d3.csv("energy-sankey-data.csv", function (data) {
             .attr("id", function (d, i) {
                 d.id = i;
                 return "link-" + i;
-            }).style("stroke", function (d) {
+            })
+			.style("stroke", function (d) {
                 return d.target.color = color(d.target.name.replace(/ .*/, ""));
             })
             .style("stroke-width", function (d) {
@@ -287,8 +288,8 @@ d3.csv("energy-sankey-data.csv", function (data) {
             isSliding = true;
         }
         slideValue = data.value;
-        d3.select("#year").text(slideValue + indexYear);
-        updateData(parseInt(slideValue));
+        d3.select("#year").text(slideValue);
+        updateData(parseInt(slideValue - indexYear));
     });
 
 	// show tooltip when a node is clicked	
