@@ -141,6 +141,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
                 }
             })
         .on("click", highlight_node_links)
+		.on("mouseout",onNodeMouseout)
 		.call(d3.behavior.drag()
 				.origin(function (d) { return d; })
 				.on("dragstart", function () { this.parentNode.appendChild(this); })
@@ -151,12 +152,12 @@ d3.csv("energy-sankey-data.csv", function (data) {
         .attr("height", function (d) { return d.dy; })
         .attr("width", sankey.nodeWidth())
 		.attr("class", function (d) { return d.name;	})
-		.attr("class", function (d) { return d.name; })
+		.attr("class", function (d) { return d.name; })		
 		.style("fill", function (d) { return d.color = color(d.name.replace(/ .*/, "")); })
         .style("stroke", function (d) { return d3.rgb(d.color).darker(2); })
 		.style("stroke-width", "0px");
 
-    // add in the title for the nodes
+	// add in the title for the nodes
     node.append("text")
         .attr("x", -2)
         .attr("y", function (d) { return d.dy / 2; })
@@ -177,7 +178,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         .filter(function (d) { return d.x < width / 2; })
         .attr("x", 2 + sankey.nodeWidth())
         .attr("text-anchor", "start");
-
+		
     function getValue(passedObj) {
         return passedObj.__data__.value;
     }
@@ -322,9 +323,12 @@ d3.csv("energy-sankey-data.csv", function (data) {
 			play = null;
 	}); */
 	
-	// show tooltip when a node is clicked	
+	// highlight a node on hover	
     function highlight_node_links(node, i) {
-
+		if (isSliding){
+			return;
+		}
+		
         var remainingNodes = [],
             nextNodes = [];
 
@@ -362,12 +366,36 @@ d3.csv("energy-sankey-data.csv", function (data) {
                 remainingNodes = nextNodes;
             }
         });
+		
+		// this section here controls the tooltip 
+		var eX = this.__data__.x;
+		var eY = this.__data__.y + 130;
+
+		if( eX < width / 2 ){
+		  eX = 110;
+		} else{
+		  eX = width - 400;
+		  if ( eY > (height+100)*0.9 ){ eY = (height+100)*0.9 }
+		};
+		
+		d3.select(".hover-tooltip-sankey").transition().duration(50).delay(50)
+			.style("top",eY+"px").style("left",eX+"px")
+			.style("background-color","rgba(255,255,255,.9)")
+			.style("z-index","5");
+		d3.select(".hover-value").text((this.__data__.value).toFixed(0) + " Trillion Btu")
+			.transition().duration(50).delay(50).style("background-color","rgba(255,255,255,.9)");
     }
 
-	// show a tooltip when a link is clicked		
+	// highlight link on hover
     function highlight_link(id, opacity) {
         d3.select("#link-" + id).style("stroke-opacity", opacity);
-    }
+    }	
+	
+	function onNodeMouseout(){
+		d3.select(".hover-tooltip-sankey")
+			.transition().duration(50).delay(50).style("background-color","rgba(255,255,255,0)").style("z-index","-1");
+		d3.select(".hover-value").transition().duration(50).delay(50).style("background-color","rgba(255,255,255,0)");
+    }			
 	
     function dragmove(d) {
                     d3.select(this).attr("transform",
