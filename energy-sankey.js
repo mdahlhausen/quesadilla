@@ -1,4 +1,6 @@
-var slideValue = 60,
+var slideYear = 2010,
+    indexYear = 1949,
+	endYear = 2040;
     isSliding = false,
     countryGreyBlue = "#b6c5d0",
     currentWidth = $(".sankey-container").width();
@@ -42,8 +44,6 @@ var sankey = d3.sankey()
 
 var path = sankey.link();
 
-var startingYear = 2010,
-    indexYear = 1949;
 var graph, data, link, node, sliderEvent;
 var energyValues = [];
 var sliderDragVisible = true;
@@ -61,7 +61,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
             target: d.target,
             values: []
         };
-        for (var j = 1949; j <= 2040; j++) {
+        for (var j = indexYear; j <= endYear; j++) {
             item.values.push(d[j.toString()]);
         }
         energyValues.push(item);
@@ -74,7 +74,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         graph.links.push({
             source: energyValues[i].source,
             target: energyValues[i].target,
-            value: energyValues[i].values[startingYear - indexYear]
+            value: energyValues[i].values[slideYear - indexYear]
         });
     });
 
@@ -287,11 +287,41 @@ d3.csv("energy-sankey-data.csv", function (data) {
             });
             isSliding = true;
         }
-        slideValue = data.value;
-        d3.select("#year").text(slideValue);
-        updateData(parseInt(slideValue - indexYear));
+        slideYear = data.value;
+        d3.select("#year").text(slideYear);
+        updateData(parseInt(slideYear - indexYear));
     });
 
+	/* auto-advance year when play button is selected.  currently 
+	var play = null; 
+	
+	$("#btnStartSlide").on("click", function startSlide() {			
+			if (play == null){
+				var year = indexYear;			
+				play = setInterval( function() {
+					if (play < endYear) {				
+						if (!isSliding) {
+							$(".sankey-container").one("mouseup", function () {
+								isSliding = false;
+							});
+							isSliding = true;
+						}					
+						year += 1;
+						slideYear = year;
+						d3.select("#year").text(slideYear);
+						updateData(parseInt(slideYear - indexYear));
+					} else {
+						stopSlide();
+					}
+				}, 1000);
+			}
+	}); 
+	
+	$("#btnStopSlide").on("click", function stopSlide() {
+			clearInterval(play);
+			play = null;
+	}); */
+	
 	// show tooltip when a node is clicked	
     function highlight_node_links(node, i) {
 
@@ -338,7 +368,8 @@ d3.csv("energy-sankey-data.csv", function (data) {
     function highlight_link(id, opacity) {
         d3.select("#link-" + id).style("stroke-opacity", opacity);
     }
-     function dragmove(d) {
+	
+    function dragmove(d) {
                     d3.select(this).attr("transform",
                         "translate(" + (
                             d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
@@ -347,6 +378,5 @@ d3.csv("energy-sankey-data.csv", function (data) {
                         ) + ")");
                     sankey.relayout();
                     link.attr("d", path);
-                }
-
+    }
 });
