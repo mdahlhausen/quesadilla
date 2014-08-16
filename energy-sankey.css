@@ -5,15 +5,15 @@
 }
 .node text {
 	pointer-events: none;
-	text-shadow: 0 1px 0 #fff;
+	text-shadow: 0px 0px 0px #999; 
 }
 .link {
 	fill: none;
 	stroke: #000;
-	stroke-opacity: 0.25;
+	stroke-opacity: 0.5;
 }
 .link:hover {
-	stroke-opacity: .75; !important
+	stroke-opacity: 0.8; !important
 }
 .axis {
 	font: 10px sans-serif;

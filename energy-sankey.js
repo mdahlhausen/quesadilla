@@ -37,7 +37,7 @@ var svg = d3.select("#chart").append("svg")
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(25)
-    .nodePadding(10)
+    .nodePadding(8)
     .size([width, height]);
 
 var path = sankey.link();
@@ -114,15 +114,9 @@ d3.csv("energy-sankey-data.csv", function (data) {
                 return "link-" + i;
             })
         .attr("d", path)
-        .style("stroke", function (d) {
-            return d.target.color = color(d.target.name.replace(/ .*/, ""));
-        })
-        .style("stroke-width", function (d) {
-            return Math.max(1, d.dy);
-        })
-        .sort(function (a, b) {
-            return b.dy - a.dy;
-        })
+        .style("stroke", function (d) { return d.target.color = color(d.target.name.replace(/ .*/, "")); })
+        .style("stroke-width", function (d) { return Math.max(1, d.dy); })
+        .sort(function (a, b) { return b.dy - a.dy; })
         .style("visibility",
             function () {
                 if (this.__data__.value == 0) {
@@ -164,27 +158,24 @@ d3.csv("energy-sankey-data.csv", function (data) {
 
     // add in the title for the nodes
     node.append("text")
-        .attr("x", -15)
+        .attr("x", -2)
         .attr("y", function (d) { return d.dy / 2; })
         .attr("dy", ".35em")
         .attr("text-anchor", "end")
         .attr("transform", null)
-        .text(
-            function (d) {
-                var shortN = d.name;
-                return shortN; //NameSwitch(shortN);
-            })
-        .style("font-size",
-            function () {
-                var textSize = 300 * this.__data__.value;
-                if (textSize > 15) {
-                    return "15px"
-                } else {
+        .text( function (d) { return d.name; })
+        .style("font-size", function () {
+                var textSize = 0.01 * this.__data__.value;
+                if (textSize > 13) {
+                    return "13px";
+                } else if (textSize < 10) {
+					return "10px";
+				} else {
                     return textSize.toString() + "px";
                 }
             })
         .filter(function (d) { return d.x < width / 2; })
-        .attr("x", 15 + sankey.nodeWidth())
+        .attr("x", 2 + sankey.nodeWidth())
         .attr("text-anchor", "start");
 
     function getValue(passedObj) {
@@ -195,14 +186,9 @@ d3.csv("energy-sankey-data.csv", function (data) {
     function updateData(index) {
 
         currentWidth = $(".sankey-container").width();
-        if (currentWidth < 550) {
-            currentWidth = 550
-        };
-        if (currentWidth > 978) {
-            currentWidth = 978
-        };
+        if (currentWidth < 550) { currentWidth = 550 };
+        if (currentWidth > 978) { currentWidth = 978 };
         width = currentWidth;
-
         $("svg").width(currentWidth);
 
         var newLinks = [];
@@ -255,11 +241,13 @@ d3.csv("energy-sankey-data.csv", function (data) {
             .attr("y", function (d) {
                 return d.dy / 2;
             })
-            .style("font-size", function () {
-                var textSize = 300 * this.__data__.value;
-                if (textSize > 15) {
-                    return "15px"
-                } else {
+			.style("font-size", function () {
+                var textSize = 0.01 * this.__data__.value;
+                if (textSize > 13) {
+                    return "13px";
+                } else if (textSize < 10) {
+					return "10px";
+				} else {
                     return textSize.toString() + "px";
                 }
             });
@@ -282,6 +270,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
                 }
             });
     }
+	
     $(document).mouseleave(
         function (event) {
             $(".sankey-container").trigger("mouseup");
@@ -289,6 +278,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         }
     );
 
+	// link slider to update function 
     $(".sankey-slider").bind("slider:changed", function (event, data) {
         if (!isSliding) {
             $(".sankey-container").one("mouseup", function () {
@@ -296,12 +286,12 @@ d3.csv("energy-sankey-data.csv", function (data) {
             });
             isSliding = true;
         }
-
         slideValue = data.value;
         d3.select("#year").text(slideValue + indexYear);
         updateData(parseInt(slideValue));
     });
 
+	// show tooltip when a node is clicked	
     function highlight_node_links(node, i) {
 
         var remainingNodes = [],
@@ -343,6 +333,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
         });
     }
 
+	// show a tooltip when a link is clicked		
     function highlight_link(id, opacity) {
         d3.select("#link-" + id).style("stroke-opacity", opacity);
     }
