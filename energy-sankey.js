@@ -313,7 +313,7 @@ d3.csv("energy-sankey-data.csv", function (data) {
 					clearInterval(play);
 					play = null;
 				}
-			}, 200);
+			}, 300);
 		}
 	}); 
 	
